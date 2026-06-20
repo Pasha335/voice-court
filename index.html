@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>اردو وائس رائٹر</title>
+</head>
+<body>
+
+<h2>اردو وائس رائٹر</h2>
+
+<button onclick="startRec()">🎤 شروع کریں</button>
+<button onclick="stopRec()">⏹ بند کریں</button>
+
+<br><br>
+
+<textarea id="txt" rows="15" cols="50"></textarea>
+
+<script>
+let recognition;
+
+function startRec() {
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    alert("آپ کا براؤزر Voice Typing سپورٹ نہیں کرتا");
+    return;
+  }
+
+  recognition = new SpeechRecognition();
+  recognition.lang = "ur-PK";
+  recognition.continuous = true;
+
+  recognition.onresult = function(event) {
+    let text = "";
+    for (let i = 0; i < event.results.length; i++) {
+      text += event.results[i][0].transcript + " ";
+    }
+    document.getElementById("txt").value = text;
+  };
+
+  recognition.start();
+}
+
+function stopRec() {
+  if (recognition) recognition.stop();
+}
+</script>
+
+</body>
+</html>
