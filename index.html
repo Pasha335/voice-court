@@ -1,53 +1,161 @@
 <!DOCTYPE html>
 <html lang="ur" dir="rtl">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>اردو وائس رائٹر</title>
+
+<title>Court Writer Pakistan</title>
+
+<style>
+
+body{
+margin:0;
+padding:20px;
+font-family:Arial,sans-serif;
+background:#f5f5f5;
+}
+
+h1{
+text-align:center;
+}
+
+.toolbar{
+position:sticky;
+top:0;
+background:white;
+padding:10px;
+box-shadow:0 2px 5px rgba(0,0,0,0.2);
+margin-bottom:15px;
+}
+
+button{
+padding:12px 18px;
+margin:5px;
+font-size:18px;
+cursor:pointer;
+}
+
+textarea{
+width:100%;
+height:1500px;
+padding:15px;
+font-size:24px;
+line-height:2;
+resize:vertical;
+box-sizing:border-box;
+}
+
+</style>
+
 </head>
+
 <body>
 
-<h2>اردو وائس رائٹر</h2>
+<h1>⚖️ Court Writer Pakistan</h1>
 
-<button onclick="startRec()">🎤 شروع کریں</button>
-<button onclick="stopRec()">⏹ بند کریں</button>
+<div class="toolbar">
 
-<br><br>
+<button onclick="startRec()">
+🎤 شروع
+</button>
 
-<textarea id="txt" rows="15" cols="50"></textarea>
+<button onclick="stopRec()">
+⏹ بند
+</button>
+
+<button onclick="copyText()">
+📋 کاپی
+</button>
+
+<button onclick="clearText()">
+🗑 صاف
+</button>
+
+</div>
+
+<textarea id="txt" placeholder="یہاں بولنا شروع کریں..."></textarea>
 
 <script>
+
 let recognition;
 
-function startRec() {
-  const SpeechRecognition =
-    window.SpeechRecognition ||
-    window.webkitSpeechRecognition;
+function startRec(){
 
-  if (!SpeechRecognition) {
-    alert("آپ کا براؤزر Voice Typing سپورٹ نہیں کرتا");
-    return;
-  }
+const SpeechRecognition=
+window.SpeechRecognition ||
+window.webkitSpeechRecognition;
 
-  recognition = new SpeechRecognition();
-  recognition.lang = "ur-PK";
-  recognition.continuous = true;
+if(!SpeechRecognition){
 
-  recognition.onresult = function(event) {
-    let text = "";
-    for (let i = 0; i < event.results.length; i++) {
-      text += event.results[i][0].transcript + " ";
-    }
-    document.getElementById("txt").value = text;
-  };
+alert("Chrome Browser استعمال کریں");
 
-  recognition.start();
+return;
+
 }
 
-function stopRec() {
-  if (recognition) recognition.stop();
+recognition=new SpeechRecognition();
+
+recognition.lang="ur-PK";
+
+recognition.continuous=true;
+
+recognition.interimResults=false;
+
+recognition.onresult=function(event){
+
+let box=document.getElementById("txt");
+
+for(let i=event.resultIndex;i<event.results.length;i++){
+
+if(event.results[i].isFinal){
+
+box.value += event.results[i][0].transcript + " ";
+
 }
+
+}
+
+};
+
+recognition.start();
+
+}
+
+function stopRec(){
+
+if(recognition){
+
+recognition.stop();
+
+}
+
+}
+
+function copyText(){
+
+let box=document.getElementById("txt");
+
+box.select();
+
+document.execCommand("copy");
+
+alert("متن کاپی ہو گیا");
+
+}
+
+function clearText(){
+
+if(confirm("تمام متن حذف کرنا چاہتے ہیں؟")){
+
+document.getElementById("txt").value="";
+
+}
+
+}
+
 </script>
 
 </body>
+
 </html>
